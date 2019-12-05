@@ -27,6 +27,11 @@ variable "tfe_organization" {
   default     = "TonyPulickal"
 }
 
+variable "prefix" {
+  description = "prefix for policy and policy set names to avoid collisions"
+  default     = "ttpdemo"
+}
+
 provider "tfe" {
   hostname = var.tfe_hostname
   token    = var.tfe_token
@@ -46,7 +51,7 @@ locals {
 ##### POLICY SETS
 ####################
 resource "tfe_policy_set" "global" {
-  name          = "global"
+  name          = "${var.prefix}-global"
   description   = "Policies that should be enforced on ALL environments."
   organization  = var.tfe_organization
   global        = true
@@ -58,7 +63,7 @@ resource "tfe_policy_set" "global" {
 }
 
 resource "tfe_policy_set" "aws-global" {
-  name          = "aws-global"
+  name          = "${var.prefix}-aws-global"
   description   = "Policies enforced in ALL AWS environments"
   organization  = var.tfe_organization
 
@@ -74,7 +79,7 @@ resource "tfe_policy_set" "aws-global" {
 }
 
 resource "tfe_policy_set" "aws-nonprod-compute" {
-  name          = "aws-nonprod-compute"
+  name          = "${var.prefix}-aws-nonprod-compute"
   description   = "Policies enforced in non-production AWS compute environments"
   organization  = var.tfe_organization
 
@@ -90,7 +95,7 @@ resource "tfe_policy_set" "aws-nonprod-compute" {
 }
 
 resource "tfe_policy_set" "azure-nonprod-compute" {
-  name          = "azure-nonprod-compute"
+  name          = "${var.prefix}-azure-nonprod-compute"
   description   = "Policies enforced in non-production Azure compute environments"
   organization  = var.tfe_organization
 
@@ -111,7 +116,7 @@ resource "tfe_policy_set" "azure-nonprod-compute" {
 
 ## Global policies
 resource "tfe_sentinel_policy" "limit-cost-by-workspace-type" {
-  name          = "limit-cost-by-workspace-type"
+  name          = "${var.prefix}-limit-cost-by-workspace-type"
   description   = "Cap max potential cost by workspace environment."
   organization  = var.tfe_organization
   policy        = file("./cloud-agnostic/limit-cost-by-workspace-type.sentinel")
@@ -119,7 +124,7 @@ resource "tfe_sentinel_policy" "limit-cost-by-workspace-type" {
 }
 
 resource "tfe_sentinel_policy" "require-all-resources-from-pmr" {
-  name          = "require-all-resources-from-pmr"
+  name          = "${var.prefix}-require-all-resources-from-pmr"
   description   = "Enforce that all resources originate from Private Module Registry."
   organization  = var.tfe_organization
   policy        = file("./cloud-agnostic/require-all-resources-from-pmr.sentinel")
@@ -128,7 +133,7 @@ resource "tfe_sentinel_policy" "require-all-resources-from-pmr" {
 
 ## AWS Global Policies
 resource "tfe_sentinel_policy" "aws-enforce-mandatory-tags" {
-  name          = "aws-enforce-mandatory-tags"
+  name          = "${var.prefix}-aws-enforce-mandatory-tags"
   description   = "Enforce that all AWS resources have required tags."
   organization  = var.tfe_organization
   policy        = file("./aws/enforce-mandatory-tags.sentinel")
@@ -136,7 +141,7 @@ resource "tfe_sentinel_policy" "aws-enforce-mandatory-tags" {
 }
 
 resource "tfe_sentinel_policy" "aws-restrict-ingress-sg-rule-cidr-blocks" {
-  name          = "aws-restrict-ingress-sg-rule-cidr-blocks"
+  name          = "${var.prefix}-aws-restrict-ingress-sg-rule-cidr-blocks"
   description   = "Enforce that no AWS resources allow inbound traffic to the internet."
   organization  = var.tfe_organization
   policy        = file("./aws/restrict-ingress-sg-rule-cidr-blocks.sentinel")
@@ -145,7 +150,7 @@ resource "tfe_sentinel_policy" "aws-restrict-ingress-sg-rule-cidr-blocks" {
 
 ## AWS Compute Policies
 resource "tfe_sentinel_policy" "aws-restrict-availability-zones" {
-  name          = "aws-restrict-availability-zones"
+  name          = "${var.prefix}-aws-restrict-availability-zones"
   description   = "Enforce that all AWS resources are created in approved AZs."
   organization  = var.tfe_organization
   policy        = file("./aws/restrict-availability-zones.sentinel")
@@ -153,7 +158,7 @@ resource "tfe_sentinel_policy" "aws-restrict-availability-zones" {
 }
 
 resource "tfe_sentinel_policy" "aws-restrict-ec2-instance-type" {
-  name          = "aws-restrict-ec2-instance-type"
+  name          = "${var.prefix}-aws-restrict-ec2-instance-type"
   description   = "Enforce that all AWS EC2 instances are approved types." 
   organization  = var.tfe_organization
   policy        = file("./aws/restrict-ec2-instance-type.sentinel")
@@ -161,7 +166,7 @@ resource "tfe_sentinel_policy" "aws-restrict-ec2-instance-type" {
 }
 
 resource "tfe_sentinel_policy" "aws-restrict-db-instance-engines" {
-  name          = "aws-restrict-db-instance-engines"
+  name          = "${var.prefix}-aws-restrict-db-instance-engines"
   description   = "Enforce that all AWS RDS instances are approved types." 
   organization  = var.tfe_organization
   policy        = file("./aws/restrict-db-instance-engines.sentinel")
@@ -170,7 +175,7 @@ resource "tfe_sentinel_policy" "aws-restrict-db-instance-engines" {
 
 ## Azure Compute Policies
 resource "tfe_sentinel_policy" "azure-enforce-mandatory-tags" {
-  name          = "azure-enforce-mandatory-tags"
+  name          = "${var.prefix}-azure-enforce-mandatory-tags"
   description   = "Enforce that all Azure resources have required tags."
   organization  = var.tfe_organization
   policy        = file("./azure/enforce-mandatory-tags.sentinel")
@@ -178,7 +183,7 @@ resource "tfe_sentinel_policy" "azure-enforce-mandatory-tags" {
 }
 
 resource "tfe_sentinel_policy" "azure-restrict-vm-size" {
-  name          = "azure-restrict-vm-size"
+  name          = "${var.prefix}-azure-restrict-vm-size"
   description   = "Enforce that all Azure resources have required tags."
   organization  = var.tfe_organization
   policy        = file("./azure/restrict-vm-size.sentinel")
