@@ -128,7 +128,7 @@ resource "tfe_sentinel_policy" "require-all-resources-from-pmr" {
   description   = "Enforce that all resources originate from Private Module Registry."
   organization  = var.tfe_organization
   policy        = file("./cloud-agnostic/require-all-resources-from-pmr.sentinel")
-  enforce_mode  = "hard-mandatory"
+  enforce_mode  = "soft-mandatory"
 }
 
 ## AWS Global Policies
