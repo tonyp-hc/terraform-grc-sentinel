@@ -95,8 +95,8 @@ resource "tfe_policy_set" "azure-nonprod-compute" {
   organization  = var.tfe_organization
 
   policy_ids = [
-    "${tfe_sentinel_policy.azure-restrict-vm-size}",
-    "${tfe_sentinel_policy.azure-enforce-mandatory-tags}",  
+    "${tfe_sentinel_policy.azure-restrict-vm-size.id}",
+    "${tfe_sentinel_policy.azure-enforce-mandatory-tags.id}",  
   ]
 
   workspace_external_ids = [
