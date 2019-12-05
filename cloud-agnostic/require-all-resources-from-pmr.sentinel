@@ -44,7 +44,7 @@ require_modules_from_pmr = func(address, organization) {
 address = "app.terraform.io"
 
 # Define organization variable
-organization = "Cloud-Operations"
+organization = "TonyPulickal"
 
 ##### Rules #####
 
