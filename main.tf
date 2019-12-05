@@ -100,8 +100,8 @@ resource "tfe_policy_set" "azure-nonprod-compute" {
   ]
 
   workspace_external_ids = [
-    "${local.workspaces["demo-az-compute-dev}",
-    "${local.workspaces["demo-az-compute-test}",
+    "${local.workspaces["demo-az-compute-dev"]}",
+    "${local.workspaces["demo-az-compute-test"]}",
   ]
 }
 
